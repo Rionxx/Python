@@ -9,6 +9,7 @@ masu = [
 ]
 
 target = 0
+win = 0
 
 def masume():
   cvs.delete("all")
@@ -30,6 +31,8 @@ def masume():
 
 def click(e):
   global target
+  if target == 1 or target == 3 or target == 5 or target == 7:
+    return
   mx = int(e.x/200)
   my = int(e.y/200)
   if mx>2: mx = 2
@@ -55,6 +58,39 @@ def computer():
       time.sleep(0.5)
       break
 
+def judgement():
+  global win
+  win = 0
+  for n in range(1, 3):
+    #judge vertical line
+
+    if masu[0][0] == n and masu[1][0] == n and masu[2][0] == n:
+      win = n
+    if masu[0][1] == n and masu[1][1] == n and masu[2][1] == n:
+      win = n
+    if masu[0][2] == n and masu[1][2] == n and masu[2][2] == n:
+      win = n
+
+      #judge horizontal line
+    
+    if masu[0][0] == n and masu[1][0] == n and masu[2][0] == n:
+      win = n
+    if masu[1][0] == n and masu[1][1] == n and masu[1][2] == n:
+      win = n
+    if masu[2][0] == n and masu[2][1] == n and masu[2][2] == n:
+      win = n
+    
+    #judge diagonal
+    if masu[0][0] == n and masu[1][1] == n and masu[2][2] == n:
+      win = n
+    if masu[0][2] == n and masu[1][1] == n and masu[2][0] == n:
+      win = n
+  
+  if win == 1:
+    root.title("Bingo three circles")
+  if win == 2:
+    root.title("Bingo three crosses")
+ 
 root = tkinter.Tk()
 root.title("Line Up three squares")
 root.resizable(False, False)
