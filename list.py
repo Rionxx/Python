@@ -28,6 +28,7 @@ def masume():
       if masu[y][x] == 2:
         cvs.create_line(X+20, Y+20, X+180, Y+180, fill="red", width=12)
         cvs.create_line(X+180, Y+20, X+20, Y+180, fill="red", width=12)
+
     if target == 0:
       cvs.create_text(300, 300, text="スタート", fill="navy", font=FNT)
     cvs.update()
@@ -36,16 +37,18 @@ def masume():
 
 def click(e):
   global target
+
   if win == 9:
     replay()
     return
-
   if target == 1 or target == 3 or target == 5 or target == 7:
     return
+
   mx = int(e.x/200)
   my = int(e.y/200)
   if mx>2: mx = 2
   if my>2: my = 2
+
   if masu[my][mx] == 0:
     masu[my][mx] = 1
     target += 1
@@ -53,16 +56,46 @@ def click(e):
     time.sleep(0.5)
     judgement()
     WinOrLose()
+    
     if target < 9:
       computer()
+      masume()
+      time.sleep(0.5)
+      judgement()
+      WinOrLose()
 
 #Process Computer
 
 def computer():
   global target
+
+  #line up three masu
+  for y in range(3):
+    for x in range(3):
+      if masu[y][x] == 0:
+        masu[y][x] = 2
+        judgement()
+        if win == 2:
+          target += 1
+          return
+        masu[y][x] = 0
+
+  #stop play that line up three masu
+  for y in range(3):
+    for x in range(3):
+      if masu[y][x] == 0:
+        masu[y][x] = 1
+        judgement()
+        if win == 1:
+          masu[y][x] = 2
+          target += 1
+          return
+        masu[y][x] = 0
+        
   while True:
     x = random.randint(0, 2)
     y = random.randint(0, 2)
+
     if masu[y][x] == 0:
       masu[y][x] = 2
       target += 1
@@ -79,7 +112,6 @@ def judgement():
   win = 0
   for n in range(1, 3):
     #judge vertical line
-
     if masu[0][0] == n and masu[1][0] == n and masu[2][0] == n:
       win = n
     if masu[0][1] == n and masu[1][1] == n and masu[2][1] == n:
@@ -88,7 +120,6 @@ def judgement():
       win = n
 
     #judge horizontal line
-    
     if masu[0][0] == n and masu[1][0] == n and masu[2][0] == n:
       win = n
     if masu[1][0] == n and masu[1][1] == n and masu[1][2] == n:
