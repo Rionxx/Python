@@ -1,6 +1,7 @@
 import tkinter
 import random
 import time
+from tkinter import font
 
 masu = [
   [1, 0, 0],
@@ -10,6 +11,7 @@ masu = [
 
 target = 0
 win = 0
+FNT = ("Times New Roman", 60)
 
 def masume():
   cvs.delete("all")
@@ -26,11 +28,18 @@ def masume():
       if masu[y][x] == 2:
         cvs.create_line(X+20, Y+20, X+180, Y+180, fill="red", width=12)
         cvs.create_line(X+180, Y+20, X+20, Y+180, fill="red", width=12)
+    if target == 0:
+      cvs.create_text(300, 300, text="スタート", fill="navy", font=FNT)
     cvs.update()
 
+#Process Click
 
 def click(e):
   global target
+  if win == 9:
+    replay()
+    return
+
   if target == 1 or target == 3 or target == 5 or target == 7:
     return
   mx = int(e.x/200)
@@ -42,9 +51,12 @@ def click(e):
     target += 1
     masume()
     time.sleep(0.5)
+    judgement()
+    WinOrLose()
     if target < 9:
       computer()
 
+#Process Computer
 
 def computer():
   global target
@@ -56,7 +68,11 @@ def computer():
       target += 1
       masume()
       time.sleep(0.5)
+      judgement()
+      WinOrLose()
       break
+
+#judgement win
 
 def judgement():
   global win
@@ -71,7 +87,7 @@ def judgement():
     if masu[0][2] == n and masu[1][2] == n and masu[2][2] == n:
       win = n
 
-      #judge horizontal line
+    #judge horizontal line
     
     if masu[0][0] == n and masu[1][0] == n and masu[2][0] == n:
       win = n
@@ -91,6 +107,31 @@ def judgement():
   if win == 2:
     root.title("Bingo three crosses")
  
+
+# win or lose
+
+def WinOrLose():
+  global target
+  if win == 1:
+    cvs.create_text(300, 300, text="You Win!", font=FNT, fill="cyan")
+    target = 9
+  if win == 2:
+    cvs.create_text(300, 300, text="Computer Win!", font=FNT, fill="gold")
+    target = 9
+  if win == 0 and target == 9:
+    cvs.create_text(300, 300, text="Drow", font=FNT, fill="lime")
+
+
+#Process replay
+
+def replay():
+  global target
+  target = 0
+  for y in range(3):
+    for x in range(3):
+      masu[y][x] = 0
+  masume()
+
 root = tkinter.Tk()
 root.title("Line Up three squares")
 root.resizable(False, False)
