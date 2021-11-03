@@ -55,15 +55,34 @@ def check_roll(cards):
 if __name__== "__main__":
   bill = []
   marks = ('♣︎', '🔸', '❤️', '♠️')
+  roles = ("flash", "1 Pair", "3 Card", "2 Pair", "4 Card","Straight", "Full House", "Straight Flash", "Loyal Stright Flash", "Buta")
+  role_count = [0 for x in range(len(roles))]
 
   bill = [card(k, j) for k in marks for j in range(1, 14)]
   random.shuffle(bill)
+  start_time = datetime.datetime.now()
 
+  count = 0
+  while count < 50000:
+    count += 1
 
-  hand = bill[:5]
-  hand_nums = [c.num for c in hand]
-  hand_marks = [c.mark for c in hand]
+    bill = [card(k, j) for k in marks for j in range(1, 14)]
+    random.shuffle(bill)
+    hand = bill[:5]
+    hand_nums = [c.num for c in hand]
+    hand_marks = [c.mark for c in hand]
+    for i in range(len(hand_nums)):
+      print("Card", i + 1, ":", hand_nums[i], hand_marks[i])
 
-  for i in range(len(hand_nums)):
-    print("Card", i + 1, ":", hand_nums[i], hand_marks[i])
-  print("Result:", check_roll(hand))
+    roll = check_roll(hand)
+    role_count[roll] += 1
+
+  print("-"*20)
+  print('{}count Result'.format(count))
+  print("-"*20)
+
+  for i in range(len(roles)):
+    print('{}:{}回 確率:{}%'.format(roles[i], role_count[i], role_count[i] / count * 100))
+
+  end_time = datetime.datetime.now()
+  print("Pass time:{}".format(end_time - start_time))
