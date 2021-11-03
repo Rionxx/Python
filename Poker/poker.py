@@ -6,12 +6,14 @@ class card:
     self.num = num
     self.mark = mark
 
+
 def pair_check(cards):
   card_multi = 0
   for s in set(cards):
     if card_multi < cards.count(s):
       card_multi = cards.count(s)
   return card_multi
+
 
 def mark_check(cards_mark):
   mark_multi = 0
